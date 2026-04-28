@@ -873,27 +873,26 @@ export default function QuizApp() {
                 </div>
 
                 <h2 className="font-display text-xl sm:text-3xl font-light leading-tight mb-2">
-                  Seu perfil revela <em className="italic" style={{background:'linear-gradient(135deg, var(--accent), #e8c46e)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text'}}>pontos críticos</em> que exigem atenção
+                  Você é o <em className="italic" style={{background:'linear-gradient(135deg, var(--accent), #e8c46e)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text'}}>{profileResult.name}</em>
                 </h2>
                 <p className="text-[var(--text-secondary)] text-sm sm:text-base leading-relaxed max-w-md mx-auto">
-                  Baseado nas suas respostas, identificamos padrões que estão impactando negativamente sua experiência com entretenimento.
+                  {profileResult.description}
                 </p>
+                <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[var(--accent-dim)] border border-[rgba(212,168,83,0.2)]">
+                  <span className="text-xs text-[var(--accent)]">★ Apenas 8% dos usuários têm esse perfil</span>
+                </div>
               </div>
 
               {/* Satisfaction Score Ring */}
               <ScoreRing score={calculateSatisfactionScore(answers)} />
 
-              {/* Profile Card */}
+              {/* Profile Icon */}
               <div className="text-center mb-6 sm:mb-8">
                 <div
                   className={`animate-bounce-in w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-gradient-to-br ${profileResult.color} flex items-center justify-center text-3xl sm:text-4xl mb-3 sm:mb-4`}
                 >
                   {profileResult.icon}
                 </div>
-                <h3 className="font-display text-lg sm:text-xl font-normal mb-1">
-                  Você é o <span className="italic" style={{color:'var(--accent)'}}>{profileResult.name}</span>
-                </h3>
-                <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-md mx-auto">{profileResult.description}</p>
               </div>
 
               {/* Pain Points */}
@@ -938,16 +937,19 @@ export default function QuizApp() {
               {/* ROI Card */}
               {calculateROI(answers) && (
                 <div className="roi-card mb-6 sm:mb-8">
-                  <div className="font-mono text-[0.68rem] text-[var(--success)] tracking-[0.15em] uppercase mb-3">Retorno sobre investimento</div>
+                  <div className="font-mono text-[0.68rem] text-[var(--success)] tracking-[0.15em] uppercase mb-3">Economia de Tempo</div>
                   {(() => {
                     const roi = calculateROI(answers)!;
                     return (
                       <>
-                        <p className="font-display text-xl sm:text-2xl font-light text-[var(--text)] mb-2">
-                          MrCine se paga em <span className="italic font-normal" style={{color:'var(--success)'}}>{roi.daysToPayOff} dias</span> de uso
+                        <p className="text-[var(--text)] text-sm sm:text-base mb-1">
+                          Com base nas suas respostas, você perde em média <strong className="text-[var(--text)]">{roi.monthlyWasteBRL > 0 ? Math.round(roi.monthlyWasteBRL / roi.timeValueBRL) : 0}h/mês</strong> escolhendo filme.
                         </p>
-                        <p className="text-[var(--text-secondary)] text-sm">
-                          Economia líquida de <strong className="text-[var(--success)]">R$ {roi.monthlySavingsBRL}/mês</strong>
+                        <p className="font-display text-xl sm:text-2xl font-light text-[var(--text)] mb-2">
+                          O MrCine PRO se paga em <span className="italic font-normal" style={{color:'var(--success)'}}>{roi.daysToPayOff} dias</span> de uso
+                        </p>
+                        <p className="text-lg font-bold" style={{color:'var(--success)'}}>
+                          Economia líquida: R$ {roi.monthlySavingsBRL}/mês
                         </p>
                       </>
                     );
@@ -981,8 +983,11 @@ export default function QuizApp() {
                 onClick={() => setStep('signup')}
                 className="cta-gold w-full py-4 sm:py-5 text-base sm:text-xl"
               >
-                Desbloquear Meu Perfil Completo
+                Quero Acessar Meu Perfil Completo
               </button>
+              <p className="text-xs text-[var(--text-muted)] text-center mt-3">
+                Não precisa de cartão. Conta grátis com 30 swipes/dia.
+              </p>
             </div>
           )}
 
@@ -993,9 +998,9 @@ export default function QuizApp() {
                 <IconLock className="w-7 h-7 sm:w-9 sm:h-9 text-[var(--bg)]" />
               </div>
 
-              <h2 className="font-display text-xl sm:text-3xl font-light mb-2">Crie sua conta</h2>
+              <h2 className="font-display text-xl sm:text-3xl font-light mb-2">Salvar seu Perfil Cinematográfico</h2>
               <p className="text-[var(--text-secondary)] text-sm sm:text-base mb-6 sm:mb-8 max-w-md">
-                Quase lá! Crie uma senha para acessar seu perfil cinematográfico completo, dicas diárias de filmes e muito mais.
+                Seu resultado está pronto. Crie uma senha para acessar quando quiser, receber dicas diárias e usar o Oráculo de IA.
               </p>
 
               <div className="w-full max-w-sm space-y-4 text-left">
@@ -1024,13 +1029,27 @@ export default function QuizApp() {
                       Criando conta...
                     </>
                   ) : (
-                    <>Criar Conta e Continuar <IconArrowRight className="w-5 h-5" /></>
+                    <>Criar Minha Conta Gratuita <IconArrowRight className="w-5 h-5" /></>
                   )}
                 </button>
               </div>
-              <p className="mt-6 sm:mt-8 text-[var(--text-muted)] text-xs max-w-xs">
-                Seus dados estão seguros conosco. Criamos essa conta para que você possa acessar seu perfil a qualquer momento.
-              </p>
+              <div className="mt-6 sm:mt-8 max-w-xs text-left bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius-sm)] p-4">
+                <p className="text-xs font-medium text-[var(--text)] mb-2">O que acontece depois:</p>
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2 text-xs text-[var(--text-secondary)]">
+                    <span className="text-[var(--success)] shrink-0">✓</span>
+                    <span>Acesso imediato ao seu Perfil Cinematográfico</span>
+                  </div>
+                  <div className="flex items-start gap-2 text-xs text-[var(--text-secondary)]">
+                    <span className="text-[var(--success)] shrink-0">✓</span>
+                    <span>30 swipes por dia no plano gratuito</span>
+                  </div>
+                  <div className="flex items-start gap-2 text-xs text-[var(--text-secondary)]">
+                    <span className="text-[var(--success)] shrink-0">✓</span>
+                    <span>Sem spam. Cancele quando quiser.</span>
+                  </div>
+                </div>
+              </div>
             </div>
           )}
 
@@ -1038,10 +1057,11 @@ export default function QuizApp() {
           {step === 'pricing' && (
             <div key="pricing" className="animate-fade-in-up flex-1 flex flex-col pb-6 sm:pb-10">
               <div className="text-center mb-6 sm:mb-8">
-                <h2 className="font-display text-xl sm:text-3xl font-light mb-3 sm:mb-4">Escolha seu acesso Pro</h2>
+                <h2 className="font-display text-xl sm:text-3xl font-light mb-2">Desbloqueie o Oráculo de IA</h2>
+                <p className="text-[var(--text-secondary)] text-sm sm:text-base mb-3 sm:mb-4">O plano gratuito é bom. O PRO é quem resolve o problema de verdade.</p>
                 <div className="inline-flex items-center gap-2 bg-[var(--accent-dim)] border border-[rgba(212,168,83,0.2)] text-[var(--accent)] px-4 py-2 rounded-full font-mono text-xs sm:text-sm tracking-[0.1em] uppercase">
                   <IconCrown className="w-3 h-3 sm:w-4 sm:h-4 fill-current" />
-                  Preço de lançamento — vagas limitadas
+                  Menos que um café por semana
                 </div>
               </div>
 
@@ -1065,6 +1085,7 @@ export default function QuizApp() {
                       <div>
                         <h3 className="text-base sm:text-xl font-bold mb-0.5 sm:mb-1">{plan.name}</h3>
                         {plan.savings && <span className="text-[var(--success)] text-xs sm:text-sm font-medium">{plan.savings}</span>}
+                        {plan.daily && <p className="text-[var(--text-muted)] text-xs mt-0.5">{plan.daily}</p>}
                       </div>
                       <div className="text-right">
                         <div className="font-display text-lg sm:text-2xl font-semibold text-[var(--accent)]">{plan.price}</div>
@@ -1085,7 +1106,7 @@ export default function QuizApp() {
                 disabled={isSubscribing}
                 className={`cta-gold w-full py-4 sm:py-5 text-base sm:text-xl mb-3 sm:mb-4 ${isSubscribing ? 'opacity-50 cursor-not-allowed !transform-none !shadow-none' : ''}`}
               >
-                {isSubscribing ? 'Processando...' : 'Assinar Agora'}
+                {isSubscribing ? 'Processando...' : 'Começar Meu Acesso PRO'}
               </button>
 
               <div className="bg-[var(--surface)] border border-[var(--border)] rounded-[var(--radius)] p-4 sm:p-5 flex items-start gap-3 sm:gap-4">
@@ -1101,11 +1122,11 @@ export default function QuizApp() {
               {/* Urgency Bar */}
               <div className="urgency-bar mt-5">
                 <span className="urgency-dot" />
-                Oferta de lançamento — <strong>{urgencySlots} {urgencySlots === 1 ? 'vaga' : 'vagas'}</strong> restantes com esse preço
+                Preço de lançamento — sobe quando completar as primeiras 50 assinaturas
               </div>
 
               <div className="mt-4 sm:mt-6 flex justify-center items-center gap-2 text-[var(--text-muted)] text-xs sm:text-sm">
-                <IconLock className="w-3 h-3 sm:w-4 sm:h-4" /> Pagamento 100% Seguro via Stripe
+                <IconLock className="w-3 h-3 sm:w-4 sm:h-4" /> Pagamento seguro via Stripe. Cancele quando quiser.
               </div>
             </div>
           )}
